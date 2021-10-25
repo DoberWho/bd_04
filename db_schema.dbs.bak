@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Sqlite" id="Project_38432ba" template="Default" database="Sqlite" >
+	<schema name="sakila" catalogname="sakila" >
+		<table name="actor" >
+			<column name="actor_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" autoincrement="y" />
+			<column name="first_name" type="varchar" length="45" decimal="0" jt="12" mandatory="y" />
+			<column name="last_name" type="varchar" length="45" decimal="0" jt="12" mandatory="y" />
+			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
+				<defo>CURRENT_TIMESTAMP</defo>
+			</column>
+			<index name="pk_actor" unique="PRIMARY_KEY" >
+				<column name="actor_id" />
+			</index>
+			<index name="idx_actor_last_name" unique="NORMAL" >
+				<column name="last_name" />
+			</index>
+		</table>
+		<table name="category" >
+			<column name="category_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" autoincrement="y" />
+			<column name="name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
+				<defo>CURRENT_TIMESTAMP</defo>
+			</column>
+			<index name="pk_category" unique="PRIMARY_KEY" >
+				<column name="category_id" />
+			</index>
+		</table>
+		<table name="country" >
+			<column name="country_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" autoincrement="y" />
+			<column name="country" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
+				<defo>CURRENT_TIMESTAMP</defo>
+			</column>
+			<index name="pk_country" unique="PRIMARY_KEY" >
+				<column name="country_id" />
+			</index>
+		</table>
+		<table name="film_text" >
+			<column name="film_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="title" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="description" type="text" length="65535" decimal="0" jt="-1" />
+			<index name="pk_film_text" unique="PRIMARY_KEY" >
+				<column name="film_id" />
+			</index>
+			<index name="idx_title_description" unique="NORMAL" >
+				<column name="title" />
+				<column name="description" />
+			</index>
+		</table>
+		<table name="language" >
+			<column name="language_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" autoincrement="y" />
+			<column name="name" type="char" length="20" decimal="0" jt="1" mandatory="y" />
+			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
+				<defo>CURRENT_TIMESTAMP</defo>
+			</column>
+			<index name="pk_language" unique="PRIMARY_KEY" >
+				<column name="language_id" />
+			</index>
+		</table>
+		<procedure name="film_in_stock" id="Procedure_ee225" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE PROCEDURE sakila.film_in_stock ( IN p_film_id INT, IN p_store_id INT, OUT p_film_count INT )
+BEGIN
+     SELECT inventory_id
+     FROM inventory
+     WHERE film_id = p_film_id
+     AND store_id = p_store_id
+     AND inventory_in_stock(inventory_id);
+     SELECT COUNT(*)
+     FROM inventory
+     WHERE film_id = p_film_id
+     AND store_id = p_store_id
+     AND inventory_in_stock(inventory_id)
+     INTO p_film_count;
+END]]></string>
+		</procedure>
+		<procedure name="film_not_in_stock" id="Procedure_55d398a" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE PROCEDURE sakila.film_not_in_stock ( IN p_film_id INT, IN p_store_id INT, OUT p_film_count INT )
+BEGIN
+     SELECT inventory_id
+     FROM inventory
+     WHERE film_id = p_film_id
+     AND store_id = p_store_id
+     AND NOT inventory_in_stock(inventory_id);
+     SELECT COUNT(*)
+     FROM inventory
+     WHERE film_id = p_film_id
+     AND store_id = p_store_id
+     AND NOT inventory_in_stock(inventory_id)
+     INTO p_film_count;
+END]]></string>
+		</procedure>
+		<procedure name="rewards_report" id="Procedure_15009d2" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE PROCEDURE sakila.rewards_report ( 
+    IN min_monthly_purchases TINYINT UNSIGNED
+    , IN min_dollar_amount_purchased DECIMAL(10,2)
+    , OUT count_rewardees INT
+ )
+proc: BEGIN
+    DECLARE last_month_start DATE;
+    DECLARE last_month_end DATE;
+    /* Some sanity checks... */
+    IF min_monthly_purchases = 0 THEN
+        SELECT 'Minimum monthly purchases parameter must be > 0';
+        LEAVE proc;
+    END IF;
+    IF min_dollar_amount_purchased = 0.00 THEN
+        SELECT 'Minimum monthly dollar amount purchased parameter must be > $0.00';
+        LEAVE proc;
+    END IF;
+    /* Determine start and end time periods */
+    SET last_month_start = DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH);
+    SET last_month_start = STR_TO_DATE(CONCAT(YEAR(last_month_start),'-',MONTH(last_month_start),'-01'),'%Y-%m-%d');
+    SET last_month_end = LAST_DAY(last_month_start);
+    /*
+        Create a temporary storage area for
+        Customer IDs.
+    */
+    CREATE TEMPORARY TABLE tmpCustomer (customer_id SMALLINT UNSIGNED NOT NULL PRIMARY KEY);
+    /*
+        Find all customers meeting the
+        monthly purchase requirements
+    */
+    INSERT INTO tmpCustomer (customer_id)
+    SELECT p.customer_id
+    FROM payment AS p
+    WHERE DATE(p.payment_date) BETWEEN last_month_start AND last_month_end
+    GROUP BY customer_id
+    HAVING SUM(p.amount) > min_dollar_amount_purchased
+    AND COUNT(customer_id) > min_monthly_purchases;
+    /* Populate OUT parameter with count of found customers */
+    SELECT COUNT(*) FROM tmpCustomer INTO count_rewardees;
+    /*
+        Output ALL customer information of matching rewardees.
+        Customize output as needed.
+    */
+    SELECT c.*
+    FROM tmpCustomer AS t
+    INNER JOIN customer AS c ON t.customer_id = c.customer_id;
+    /* Clean up */
+    DROP TABLE tmpCustomer;
+END]]></string>
+			<comment><![CDATA[Provides a customizable report on best customers]]></comment>
+		</procedure>
+		<function name="get_customer_balance" id="Function_2df49d0" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE FUNCTION sakila.get_customer_balance ( p_customer_id INT, p_effective_date DATETIME ) RETURNS decimal(5,2)
+BEGIN
+       #OK, WE NEED TO CALCULATE THE CURRENT BALANCE GIVEN A CUSTOMER_ID AND A DATE
+       #THAT WE WANT THE BALANCE TO BE EFFECTIVE FOR. THE BALANCE IS:
+       #   1) RENTAL FEES FOR ALL PREVIOUS RENTALS
+       #   2) ONE DOLLAR FOR EVERY DAY THE PREVIOUS RENTALS ARE OVERDUE
+       #   3) IF A FILM IS MORE THAN RENTAL_DURATION * 2 OVERDUE, CHARGE THE REPLACEMENT_COST
+       #   4) SUBTRACT ALL PAYMENTS MADE BEFORE THE DATE SPECIFIED
+  DECLARE v_rentfees DECIMAL(5,2); #FEES PAID TO RENT THE VIDEOS INITIALLY
+  DECLARE v_overfees INTEGER;      #LATE FEES FOR PRIOR RENTALS
+  DECLARE v_payments DECIMAL(5,2); #SUM OF PAYMENTS MADE PREVIOUSLY
+  SELECT IFNULL(SUM(film.rental_rate),0) INTO v_rentfees
+    FROM film, inventory, rental
+    WHERE film.film_id = inventory.film_id
+      AND inventory.inventory_id = rental.inventory_id
+      AND rental.rental_date <= p_effective_date
+      AND rental.customer_id = p_customer_id;
+  SELECT IFNULL(SUM(IF((TO_DAYS(rental.return_date) - TO_DAYS(rental.rental_date)) > film.rental_duration,
+        ((TO_DAYS(rental.return_date) - TO_DAYS(rental.rental_date)) - film.rental_duration),0)),0) INTO v_overfees
+    FROM rental, inventory, film
+    WHERE film.film_id = inventory.film_id
+      AND inventory.inventory_id = rental.inventory_id
+      AND rental.rental_date <= p_effective_date
+      AND rental.customer_id = p_customer_id;
+
+  SELECT IFNULL(SUM(payment.amount),0) INTO v_payments
+    FROM payment
+    WHERE payment.payment_date <= p_effective_date
+    AND payment.customer_id = p_customer_id;
+  RETURN v_rentfees + v_overfees - v_payments;
+END]]></string>
+		</function>
+		<function name="inventory_held_by_customer" id="Function_3609806" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE FUNCTION sakila.inventory_held_by_customer ( p_inventory_id INT ) RETURNS int(11)
+BEGIN
+  DECLARE v_customer_id INT;
+  DECLARE EXIT HANDLER FOR NOT FOUND RETURN NULL;
+  SELECT customer_id INTO v_customer_id
+  FROM rental
+  WHERE return_date IS NULL
+  AND inventory_id = p_inventory_id;
+  RETURN v_customer_id;
+END]]></string>
+		</function>
+		<function name="inventory_in_stock" id="Function_2f801ad" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE FUNCTION sakila.inventory_in_stock ( p_inventory_id INT ) RETURNS tinyint(1)
+BEGIN
+    DECLARE v_rentals INT;
+    DECLARE v_out     INT;
+    #AN ITEM IS IN-STOCK IF THERE ARE EITHER NO ROWS IN THE rental TABLE
+    #FOR THE ITEM OR ALL ROWS HAVE return_date POPULATED
+    SELECT COUNT(*) INTO v_rentals
+    FROM rental
+    WHERE inventory_id = p_inventory_id;
+    IF v_rentals = 0 THEN
+      RETURN TRUE;
+    END IF;
+    SELECT COUNT(rental_id) INTO v_out
+    FROM inventory LEFT JOIN rental USING(inventory_id)
+    WHERE inventory.inventory_id = p_inventory_id
+    AND rental.return_date IS NULL;
+    IF v_out > 0 THEN
+      RETURN FALSE;
+    ELSE
+      RETURN TRUE;
+    END IF;
+END]]></string>
+		</function>
+	</schema>
+	<connector name="MySql" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.14.jar" driver_desc="Standard" host="localhost" port="3306" instance="sakila" user="root" passwd="QS5qb2tlci4x" />
+	<connector name="Sqlite" database="Sqlite" driver_class="org.sqlite.JDBC" driver_jar="sqlite-jdbc-3.34.0.jar" driver_desc="Standard" host="localhost" port="7210" instance="C:/Users/jorge/code/castelao/21-22/bd_03/database.db" />
+	<layout name="Default Layout" id="Layout_c99d58" show_relation="name" >
+		<entity schema="sakila" name="actor" color="3986C1" x="48" y="304" />
+		<entity schema="sakila" name="category" color="3986C1" x="224" y="240" />
+		<entity schema="sakila" name="country" color="3986C1" x="416" y="176" />
+		<entity schema="sakila" name="film_text" color="3986C1" x="592" y="112" />
+		<entity schema="sakila" name="language" color="3986C1" x="752" y="48" />
+		<script name="SQL_Editor" id="Editor_5c0e8d3" language="SQL" >
+			<string><![CDATA[CREATE TABLE address (
+  address_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  address VARCHAR(50) NOT NULL,
+  address2 VARCHAR(50) DEFAULT NULL,
+  district VARCHAR(20) NOT NULL,
+  city_id SMALLINT UNSIGNED NOT NULL,
+  postal_code VARCHAR(10) DEFAULT NULL,
+  phone VARCHAR(20) NOT NULL, 
+  last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY  (address_id),
+  KEY idx_fk_city_id (city_id), 
+)]]></string>
+		</script>
+	</layout>
+</project>
