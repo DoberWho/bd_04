@@ -26,5 +26,12 @@ WHERE c.customer_id > 300 AND c.customer_id < 400;
 
 WHERE c.customer_id BETWEEN 300 AND 400;
 
-3.- Los nombres de las ciudades y el nombre de los paises en los que están
+
+
+3.- Los nombres de las ciudades y el nombre de los paises en los ´
+que están
+select c.city, co.country
+from city as c
+LEFT JOIN country as co ON c.country_id = co.country_id;
+
 
