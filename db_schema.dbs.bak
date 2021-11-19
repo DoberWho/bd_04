@@ -242,7 +242,7 @@
 				<fk_column name="rental_id" pk="rental_id" />
 			</fk>
 		</table>
-		<table name="rental" >
+		<table name="rental" generator_rows="100" >
 			<column name="rental_id" type="integer" jt="4" mandatory="y" />
 			<column name="rental_date" type="datetime" jt="93" mandatory="y" />
 			<column name="inventory_id" type="integer" jt="4" mandatory="y" />
@@ -318,7 +318,7 @@
 			<fk name="Fk_store" to_schema="Default" to_table="staff" >
 				<fk_column name="manager_staff_id" pk="staff_id" />
 			</fk>
-			<fk name="Fk_store_0" to_schema="Default" to_table="address" >
+			<fk name="Fk_store" to_schema="Default" to_table="address" >
 				<fk_column name="address_id" pk="address_id" />
 			</fk>
 		</table>
@@ -333,14 +333,14 @@
 		<entity schema="Default" name="film_category" color="C7F4BE" x="48" y="448" />
 		<entity schema="Default" name="film_text" color="C7F4BE" x="48" y="320" />
 		<entity schema="Default" name="city" color="F4DDBE" x="496" y="176" />
-		<entity schema="Default" name="rental" color="BED3F4" x="1056" y="464" />
 		<entity schema="Default" name="inventory" color="BED3F4" x="480" y="528" />
-		<entity schema="Default" name="staff" color="BED3F4" x="880" y="336" />
 		<entity schema="Default" name="customer" color="BED3F4" x="1056" y="48" />
 		<entity schema="Default" name="address" color="BED3F4" x="688" y="224" />
 		<entity schema="Default" name="country" color="F4DDBE" x="496" y="352" />
 		<entity schema="Default" name="store" color="BED3F4" x="688" y="464" />
 		<entity schema="Default" name="payment" color="BED3F4" x="880" y="96" />
+		<entity schema="Default" name="staff" color="BED3F4" x="880" y="336" />
+		<entity schema="Default" name="rental" color="BED3F4" x="1056" y="464" />
 	</layout>
 	<layout name="Sample Layout with Tools" id="Layout_427060e" show_column_type="y" show_relation="name" >
 		<entity schema="Default" name="actor" color="C7F4BE" x="496" y="240" />

@@ -7,14 +7,17 @@ LIMIT 5 OFFSET 10;
 
 
 
-1.- Nombres de las peliculas que estén en 'Japanese'
 
-SELECT f.title
+SELECT f.film_id as id, f.title, UPPER(la.name)
 FROM film as f
 LEFT JOIN 'language' as la on f.language_id=la.language_id
-WHERE la.name = 'Japanese';
+WHERE UPPER(la.name) LIKE '%ngl%';
 
 
+select *
+FROM film_text ft
+WHERE ft.description LIKE '%Anne%'
+AND ft.description NOT LIKE 'Anne%';
 
 2.- Las 'address' de los customers con ID entre 300 y 400
 

@@ -329,9 +329,7 @@
 		<entity schema="Default" name="category" color="BED3F4" x="48" y="592" />
 		<entity schema="Default" name="actor" color="C7F4BE" x="48" y="128" />
 		<entity schema="Default" name="film_actor" color="C7F4BE" x="256" y="160" />
-		<entity schema="Default" name="language" color="BED3F4" x="256" y="624" />
 		<entity schema="Default" name="film_category" color="C7F4BE" x="48" y="448" />
-		<entity schema="Default" name="film_text" color="C7F4BE" x="48" y="320" />
 		<entity schema="Default" name="city" color="F4DDBE" x="496" y="176" />
 		<entity schema="Default" name="inventory" color="BED3F4" x="480" y="528" />
 		<entity schema="Default" name="customer" color="BED3F4" x="1056" y="48" />
@@ -341,6 +339,11 @@
 		<entity schema="Default" name="payment" color="BED3F4" x="880" y="96" />
 		<entity schema="Default" name="staff" color="BED3F4" x="880" y="336" />
 		<entity schema="Default" name="rental" color="BED3F4" x="1056" y="464" />
+		<entity schema="Default" name="language" color="BED3F4" x="256" y="624" />
+		<entity schema="Default" name="film_text" color="C7F4BE" x="48" y="320" />
+		<browser id="Browse_5aed491" name="film_text" confirm_updates="y" >
+			<browse_table schema="Default" entity="film_text" x="20" y="20" width="400" height="300" />
+		</browser>
 	</layout>
 	<layout name="Sample Layout with Tools" id="Layout_427060e" show_column_type="y" show_relation="name" >
 		<entity schema="Default" name="actor" color="C7F4BE" x="496" y="240" />
