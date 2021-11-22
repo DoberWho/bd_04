@@ -52,6 +52,95 @@ GROUP BY fa.actor_id
 ORDER BY apariciones DESC
 LIMIT 1;
 
+
+EJ.21;
+
+--- Saber el ID de la película que contenga el titulo
+select film_id from film
+where title LIKE '%Academy Dinosaur%';
+
+-- Saber InventoryID de la película que contenga el titulo
+select *
+FROM inventory i
+WHERE film_id = (
+    SELECT film_id
+    FROM film
+    WHERE title LIKE '%Academy Dinosaur%'
+);
+
+-- Recoger los datos de inventoryID de la consulta anterior
+-- Y el storeID = 1 (Tienda 1)
+select i.*
+FROM inventory i
+JOIN store s on i.store_id = s.store_id
+WHERE film_id = (
+    SELECT film_id
+    FROM film
+    WHERE title LIKE '%Academy Dinosaur%'
+) AND s.store_id = 1;
+
+-- Solo recoger el inventory_id de la consulta anterior
+-- Para tener una lista que usar como argumento
+-- para la siguiente consulta
+select i.inventory_id
+FROM inventory i
+JOIN store s on i.store_id = s.store_id
+JOIN rental r on i.inventory_id = r.inventory_id
+WHERE film_id = (
+    SELECT film_id
+    FROM film
+    WHERE title LIKE '%Academy Dinosaur%'
+) AND s.store_id = 1;
+
+
+-- Recoger todos los rental que tengan el inventory_id
+SELECT * from rental
+WHERE inventory_id IN (
+    select i.inventory_id
+    FROM inventory i
+    JOIN store s on i.store_id = s.store_id
+    JOIN rental r on i.inventory_id = r.inventory_id
+    WHERE film_id = (
+        SELECT film_id
+        FROM film
+        WHERE title LIKE '%Academy Dinosaur%'
+    ) AND s.store_id = 1;
+)
+
+-- Recoger el Rental con la fecha más actual
+SELECT MAX(rental_date)
+FROM rental;
+
+-- Devuelve el returnDate de la consulta más actual
+SELECT return_date
+FROM rental
+ORDER BY rental_date DESC
+LIMIT 1;
+
+-- Devuelve NULL o una fecha en la que han devuelto la pelicula
+-- que estamos buscando en la tienda que estamos buscando
+SELECT return_date
+FROM rental
+WHERE inventory_id IN (
+ select i.inventory_id
+    FROM inventory i
+    JOIN store s on i.store_id = s.store_id
+    JOIN rental r on i.inventory_id = r.inventory_id
+    WHERE film_id = (
+        SELECT film_id
+        FROM film
+        WHERE title LIKE '%Academy Dinosaur%'
+    ) AND s.store_id = 1
+)
+ORDER BY rental_date DESC
+LIMIT 1;
+
+
+
+--- (Hasta aquí las consultas de "EJ.21")
+
+
+
 select fa.actor_id from film_actor fa
 GROUP BY fa.film_id;
 
@@ -82,7 +171,10 @@ OR actor_id = 50;
 -- Ejemplo de SubSelect. Una consulta como WHERE de otra consulta
 select * from actor a
 where actor_id IN (select fa.actor_id from film_actor fa
-GROUP BY fa.film_id);
+WHERE fa.film_id = 1);
+
+select fa.actor_id from film_actor fa
+WHERE fa.film_id = 1;
 
 -- Devuelve la fecha más alta (más cerca a ahora), más baja (más antigua) y la fecha promedio
 SELECT MAX(payment_date) as max,
