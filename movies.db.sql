@@ -136,7 +136,6 @@ ORDER BY rental_date DESC
 LIMIT 1;
 
 
-
 --- (Hasta aquí las consultas de "EJ.21")
 
 
