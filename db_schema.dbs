@@ -1,171 +1,172 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="Sqlite" id="Project_38432ba" template="Default" database="Sqlite" >
-	<schema name="sakila" catalogname="sakila" >
+<project name="Sqlite" id="Project_5c90a37" template="Default" database="Sqlite" >
+	<schema name="Default" schemaname="Default" >
 		<table name="actor" >
-			<column name="actor_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="first_name" type="varchar" length="45" decimal="0" jt="12" mandatory="y" />
-			<column name="last_name" type="varchar" length="45" decimal="0" jt="12" mandatory="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="actor_id" type="integer" jt="4" mandatory="y" />
+			<column name="first_name" type="varchar" length="45" jt="12" mandatory="y" />
+			<column name="last_name" type="varchar" length="45" jt="12" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
+			<column name="married_with" type="integer" jt="4" />
 			<index name="pk_actor" unique="PRIMARY_KEY" >
 				<column name="actor_id" />
 			</index>
 			<index name="idx_actor_last_name" unique="NORMAL" >
 				<column name="last_name" />
 			</index>
+			<fk name="Fk_actor" to_schema="Default" to_table="actor" delete_action="setNull" >
+				<fk_column name="married_with" pk="actor_id" />
+			</fk>
 		</table>
 		<table name="address" >
-			<column name="address_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="address" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
-			<column name="address2" type="varchar" length="50" decimal="0" jt="12" />
-			<column name="district" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
-			<column name="city_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="postal_code" type="varchar" length="10" decimal="0" jt="12" />
-			<column name="phone" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="address_id" type="integer" jt="4" mandatory="y" />
+			<column name="address" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="address2" type="varchar" length="50" jt="12" />
+			<column name="district" type="varchar" length="20" jt="12" mandatory="y" />
+			<column name="city_id" type="smallint" jt="5" mandatory="y" />
+			<column name="postal_code" type="varchar" length="10" jt="12" />
+			<column name="phone" type="varchar" length="20" jt="12" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_address" unique="PRIMARY_KEY" >
 				<column name="address_id" />
 			</index>
 			<index name="idx_fk_city_id" unique="NORMAL" >
 				<column name="city_id" />
 			</index>
+			<fk name="Fk_address" to_schema="Default" to_table="city" >
+				<fk_column name="city_id" pk="city_id" />
+			</fk>
 		</table>
 		<table name="category" >
-			<column name="category_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="category_id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="25" jt="12" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_category" unique="PRIMARY_KEY" >
 				<column name="category_id" />
 			</index>
 		</table>
 		<table name="city" >
-			<column name="city_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="city" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
-			<column name="country_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="city_id" type="integer" jt="4" mandatory="y" />
+			<column name="city" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="country_id" type="smallint" jt="5" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_city" unique="PRIMARY_KEY" >
 				<column name="city_id" />
 			</index>
 			<index name="idx_fk_country_id" unique="NORMAL" >
 				<column name="country_id" />
 			</index>
-			<fk name="fk_city_country" to_schema="sakila" to_table="country" update_action="cascade" >
+			<fk name="Fk_city" to_schema="Default" to_table="country" delete_action="restrict" update_action="cascade" >
 				<fk_column name="country_id" pk="country_id" />
 			</fk>
 		</table>
 		<table name="country" >
-			<column name="country_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="country" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="country_id" type="integer" jt="4" mandatory="y" />
+			<column name="country" type="varchar" length="50" jt="12" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_country" unique="PRIMARY_KEY" >
 				<column name="country_id" />
 			</index>
 		</table>
 		<table name="customer" >
-			<column name="customer_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="store_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" />
-			<column name="first_name" type="varchar" length="45" decimal="0" jt="12" mandatory="y" />
-			<column name="last_name" type="varchar" length="45" decimal="0" jt="12" mandatory="y" />
-			<column name="email" type="varchar" length="50" decimal="0" jt="12" />
-			<column name="address_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="active" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
+			<column name="customer_id" type="integer" jt="4" mandatory="y" />
+			<column name="store_id" type="smallint" jt="5" mandatory="y" />
+			<column name="first_name" type="varchar" length="45" jt="12" mandatory="y" />
+			<column name="last_name" type="varchar" length="45" jt="12" mandatory="y" />
+			<column name="email" type="varchar" length="50" jt="12" />
+			<column name="address_id" type="smallint" jt="5" mandatory="y" />
+			<column name="active" type="smallint" jt="5" mandatory="y" >
 				<defo>1</defo>
 			</column>
-			<column name="create_date" type="datetime" length="26" decimal="0" jt="93" mandatory="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="create_date" type="datetime" jt="93" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" />
 			<index name="pk_customer" unique="PRIMARY_KEY" >
 				<column name="customer_id" />
-			</index>
-			<index name="idx_fk_address_id" unique="NORMAL" >
-				<column name="address_id" />
-			</index>
-			<index name="idx_fk_store_id" unique="NORMAL" >
-				<column name="store_id" />
 			</index>
 			<index name="idx_last_name" unique="NORMAL" >
 				<column name="last_name" />
 			</index>
+			<fk name="Fk_customer" to_schema="Default" to_table="address" >
+				<fk_column name="address_id" pk="address_id" />
+			</fk>
+			<fk name="Fk_customer" to_schema="Default" to_table="store" >
+				<fk_column name="store_id" pk="store_id" />
+			</fk>
 		</table>
 		<table name="film" >
-			<column name="film_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="title" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
-			<column name="description" type="text" length="65535" decimal="0" jt="-1" />
-			<column name="release_year" type="year" length="4" decimal="0" jt="4" />
-			<column name="language_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" />
-			<column name="original_language_id" type="tinyint" length="3" decimal="0" jt="-6" unsigned="y" />
-			<column name="rental_duration" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" >
+			<column name="film_id" type="integer" jt="4" mandatory="y" />
+			<column name="title" type="varchar" length="128" jt="12" mandatory="y" />
+			<column name="description" type="text" jt="-1" />
+			<column name="release_year" type="smallint" jt="5" />
+			<column name="language_id" type="smallint" jt="5" mandatory="y" />
+			<column name="original_language_id" type="smallint" jt="5" />
+			<column name="rental_duration" type="smallint" jt="5" mandatory="y" >
 				<defo>3</defo>
 			</column>
-			<column name="rental_rate" type="decimal" length="4" decimal="2" jt="3" mandatory="y" >
+			<column name="rental_rate" type="float" length="4" decimal="2" jt="7" mandatory="y" >
 				<defo>4.99</defo>
 			</column>
-			<column name="length" type="smallint" length="5" decimal="0" jt="5" unsigned="y" />
-			<column name="replacement_cost" type="decimal" length="5" decimal="2" jt="3" mandatory="y" >
+			<column name="length" type="smallint" jt="5" />
+			<column name="replacement_cost" type="float" length="5" decimal="2" jt="7" mandatory="y" >
 				<defo>19.99</defo>
 			</column>
-			<column name="rating" type="enum" length="5" decimal="0" jt="12" >
+			<column name="rating" type="nvarchar" length="0" jt="12" >
 				<defo>&#039;G&#039;</defo>
-				<enumeration>&#039;G&#039;,&#039;PG&#039;,&#039;PG-13&#039;,&#039;R&#039;,&#039;NC-17&#039;</enumeration>
 			</column>
-			<column name="special_features" type="set" length="54" decimal="0" jt="12" >
-				<enumeration>&#039;Trailers&#039;,&#039;Commentaries&#039;,&#039;Deleted Scenes&#039;,&#039;Behind the Scenes&#039;</enumeration>
-			</column>
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="special_features" type="nvarchar" length="0" jt="12" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_film" unique="PRIMARY_KEY" >
 				<column name="film_id" />
-			</index>
-			<index name="idx_fk_language_id" unique="NORMAL" >
-				<column name="language_id" />
 			</index>
 			<index name="idx_fk_original_language_id" unique="NORMAL" >
 				<column name="original_language_id" />
 			</index>
+			<index name="idx_fk_language_id" unique="NORMAL" >
+				<column name="language_id" />
+			</index>
 			<index name="idx_title" unique="NORMAL" >
 				<column name="title" />
 			</index>
+			<fk name="Fk_film" virtual="y" to_schema="Default" to_table="language" >
+				<fk_column name="original_language_id" pk="language_id" />
+			</fk>
+			<fk name="Fk_film_0" virtual="y" to_schema="Default" to_table="language" >
+				<fk_column name="language_id" pk="language_id" />
+			</fk>
 		</table>
 		<table name="film_actor" >
-			<column name="actor_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="film_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="actor_id" type="smallint" jt="5" mandatory="y" />
+			<column name="film_id" type="smallint" jt="5" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_film_actor" unique="PRIMARY_KEY" >
 				<column name="actor_id" />
 				<column name="film_id" />
 			</index>
-			<index name="idx_fk_film_id" unique="NORMAL" >
-				<column name="film_id" />
-			</index>
+			<fk name="Fk_film_actor" to_schema="Default" to_table="actor" >
+				<fk_column name="actor_id" pk="actor_id" />
+			</fk>
+			<fk name="Fk_film_actor" to_schema="Default" to_table="film" >
+				<fk_column name="film_id" pk="film_id" />
+			</fk>
 		</table>
-		<table name="film_category" >
-			<column name="film_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="category_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+		<table name="film_category" generator_rows="1000" >
+			<column name="film_id" type="smallint" jt="5" mandatory="y" />
+			<column name="category_id" type="smallint" jt="5" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_film_category" unique="PRIMARY_KEY" >
 				<column name="film_id" />
 				<column name="category_id" />
 			</index>
+			<fk name="Fk_film_category" to_schema="Default" to_table="film" delete_action="cascade" >
+				<fk_column name="film_id" pk="film_id" />
+			</fk>
+			<fk name="Fk_film_category" to_schema="Default" to_table="category" delete_action="cascade" >
+				<fk_column name="category_id" pk="category_id" />
+			</fk>
 		</table>
-		<table name="film_text" >
-			<column name="film_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
-			<column name="title" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
-			<column name="description" type="text" length="65535" decimal="0" jt="-1" />
+		<table name="film_text" generator_rows="100" >
+			<column name="film_id" type="smallint" jt="5" mandatory="y" />
+			<column name="title" type="varchar" length="255" jt="12" mandatory="y" regexp="((I|John|Cindy) (met|knows|is visiting|called) (Rolph|Tony|Adrian|Florian|Mike|Poe). )" />
+			<column name="description" type="text" jt="-1" />
 			<index name="pk_film_text" unique="PRIMARY_KEY" >
 				<column name="film_id" />
 			</index>
@@ -173,72 +174,87 @@
 				<column name="title" />
 				<column name="description" />
 			</index>
+			<fk name="Fk_film_text" to_schema="Default" to_table="film" delete_action="cascade" >
+				<fk_column name="film_id" pk="film_id" />
+			</fk>
 		</table>
 		<table name="inventory" >
-			<column name="inventory_id" type="mediumint" length="8" decimal="0" jt="4" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="film_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="store_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="inventory_id" type="integer" jt="4" mandatory="y" />
+			<column name="film_id" type="smallint" jt="5" mandatory="y" />
+			<column name="store_id" type="smallint" jt="5" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_inventory" unique="PRIMARY_KEY" >
 				<column name="inventory_id" />
-			</index>
-			<index name="idx_fk_film_id" unique="NORMAL" >
-				<column name="film_id" />
 			</index>
 			<index name="idx_store_id_film_id" unique="NORMAL" >
 				<column name="store_id" />
 				<column name="film_id" />
 			</index>
+			<index name="idx_fk_film_id" unique="NORMAL" >
+				<column name="film_id" />
+			</index>
+			<fk name="Fk_inventory" to_schema="Default" to_table="store" >
+				<fk_column name="store_id" pk="store_id" />
+			</fk>
+			<fk name="Fk_inventory" to_schema="Default" to_table="film" >
+				<fk_column name="film_id" pk="film_id" />
+			</fk>
 		</table>
 		<table name="language" >
-			<column name="language_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="name" type="char" length="20" decimal="0" jt="1" mandatory="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="language_id" type="integer" jt="4" mandatory="y" />
+			<column name="name" type="char" length="20" jt="1" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_language" unique="PRIMARY_KEY" >
 				<column name="language_id" />
 			</index>
 		</table>
+		<table name="mn_actor_actor" >
+			<column name="actor_1_id" type="integer" jt="4" mandatory="y" />
+			<column name="actor_2_id" type="integer" jt="4" mandatory="y" />
+			<index name="sqlite_autoindex_mn_actor_actor_1" unique="UNIQUE" >
+				<column name="actor_1_id" />
+			</index>
+			<index name="sqlite_autoindex_mn_actor_actor_2" unique="UNIQUE" >
+				<column name="actor_2_id" />
+			</index>
+			<fk name="Fk_mn_actor_actor" to_schema="Default" to_table="actor" delete_action="cascade" >
+				<fk_column name="actor_1_id" pk="actor_id" />
+			</fk>
+		</table>
 		<table name="payment" >
-			<column name="payment_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="customer_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="staff_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" />
-			<column name="rental_id" type="int" length="10" decimal="0" jt="4" />
-			<column name="amount" type="decimal" length="5" decimal="2" jt="3" mandatory="y" />
-			<column name="payment_date" type="datetime" length="26" decimal="0" jt="93" mandatory="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="payment_id" type="integer" jt="4" mandatory="y" />
+			<column name="customer_id" type="smallint" jt="5" mandatory="y" />
+			<column name="staff_id" type="smallint" jt="5" mandatory="y" />
+			<column name="rental_id" type="integer" jt="4" />
+			<column name="amount" type="float" length="5" decimal="2" jt="7" mandatory="y" />
+			<column name="payment_date" type="datetime" jt="93" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" />
 			<index name="pk_payment" unique="PRIMARY_KEY" >
 				<column name="payment_id" />
 			</index>
-			<index name="idx_fk_customer_id" unique="NORMAL" >
-				<column name="customer_id" />
-			</index>
-			<index name="idx_fk_staff_id" unique="NORMAL" >
-				<column name="staff_id" />
-			</index>
+			<fk name="Fk_payment" to_schema="Default" to_table="customer" >
+				<fk_column name="customer_id" pk="customer_id" />
+			</fk>
+			<fk name="Fk_payment" to_schema="Default" to_table="staff" >
+				<fk_column name="staff_id" pk="staff_id" />
+			</fk>
+			<fk name="Fk_payment" to_schema="Default" to_table="rental" >
+				<fk_column name="rental_id" pk="rental_id" />
+			</fk>
 		</table>
-		<table name="rental" >
-			<column name="rental_id" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
-			<column name="rental_date" type="datetime" length="26" decimal="0" jt="93" mandatory="y" />
-			<column name="inventory_id" type="mediumint" length="8" decimal="0" jt="4" mandatory="y" unsigned="y" />
-			<column name="customer_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="return_date" type="datetime" length="26" decimal="0" jt="93" />
-			<column name="staff_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+		<table name="rental" generator_rows="100" >
+			<column name="rental_id" type="integer" jt="4" mandatory="y" />
+			<column name="rental_date" type="datetime" jt="93" mandatory="y" />
+			<column name="inventory_id" type="integer" jt="4" mandatory="y" />
+			<column name="customer_id" type="smallint" jt="5" mandatory="y" />
+			<column name="return_date" type="datetime" jt="93" />
+			<column name="staff_id" type="smallint" jt="5" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_rental" unique="PRIMARY_KEY" >
 				<column name="rental_id" />
 			</index>
-			<index name="rental_date" unique="UNIQUE" >
-				<column name="rental_date" />
-				<column name="inventory_id" />
-				<column name="customer_id" />
+			<index name="idx_fk_staff_id" unique="NORMAL" >
+				<column name="staff_id" />
 			</index>
 			<index name="idx_fk_customer_id" unique="NORMAL" >
 				<column name="customer_id" />
@@ -246,324 +262,156 @@
 			<index name="idx_fk_inventory_id" unique="NORMAL" >
 				<column name="inventory_id" />
 			</index>
-			<index name="idx_fk_staff_id" unique="NORMAL" >
-				<column name="staff_id" />
+			<index name="sqlite_autoindex_rental_1" unique="UNIQUE" >
+				<column name="rental_date" />
+				<column name="inventory_id" />
+				<column name="customer_id" />
 			</index>
+			<fk name="Fk_rental" to_schema="Default" to_table="customer" >
+				<fk_column name="customer_id" pk="customer_id" />
+			</fk>
+			<fk name="Fk_rental" to_schema="Default" to_table="staff" >
+				<fk_column name="staff_id" pk="staff_id" />
+			</fk>
+			<fk name="Fk_rental" to_schema="Default" to_table="inventory" >
+				<fk_column name="inventory_id" pk="inventory_id" />
+			</fk>
 		</table>
-		<table name="staff" >
-			<column name="staff_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="first_name" type="varchar" length="45" decimal="0" jt="12" mandatory="y" />
-			<column name="last_name" type="varchar" length="45" decimal="0" jt="12" mandatory="y" />
-			<column name="address_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="picture" type="blob" length="65535" decimal="0" jt="2004" />
-			<column name="email" type="varchar" length="50" decimal="0" jt="12" />
-			<column name="store_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" />
-			<column name="active" type="boolean" length="1" decimal="0" jt="-7" mandatory="y" >
+		<table name="staff" generator_rows="200" >
+			<column name="staff_id" type="integer" jt="4" mandatory="y" />
+			<column name="first_name" type="varchar" length="45" jt="12" mandatory="y" />
+			<column name="last_name" type="varchar" length="45" jt="12" mandatory="y" />
+			<column name="address_id" type="smallint" jt="5" mandatory="y" />
+			<column name="picture" type="blob" jt="2004" regexp_nulls="0" />
+			<column name="email" type="varchar" length="50" jt="12" regexp_nulls="0" />
+			<column name="store_id" type="smallint" jt="5" mandatory="y" />
+			<column name="active" type="smallint" jt="5" mandatory="y" >
 				<defo>1</defo>
 			</column>
-			<column name="username" type="varchar" length="16" decimal="0" jt="12" mandatory="y" />
-			<column name="password" type="varchar" length="40" decimal="0" jt="12" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+			<column name="username" type="varchar" length="16" jt="12" mandatory="y" />
+			<column name="password" type="varchar" length="40" jt="12" regexp_nulls="0" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_staff" unique="PRIMARY_KEY" >
 				<column name="staff_id" />
-			</index>
-			<index name="idx_fk_address_id" unique="NORMAL" >
-				<column name="address_id" />
 			</index>
 			<index name="idx_fk_store_id" unique="NORMAL" >
 				<column name="store_id" />
 			</index>
+			<fk name="Fk_staff" to_schema="Default" to_table="address" >
+				<fk_column name="address_id" pk="address_id" />
+			</fk>
 		</table>
-		<table name="store" >
-			<column name="store_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" autoincrement="y" />
-			<column name="manager_staff_id" type="tinyint" length="3" decimal="0" jt="-6" mandatory="y" unsigned="y" />
-			<column name="address_id" type="smallint" length="5" decimal="0" jt="5" mandatory="y" unsigned="y" />
-			<column name="last_update" type="timestamp" length="26" decimal="0" jt="93" mandatory="y" >
-				<defo>CURRENT_TIMESTAMP</defo>
-			</column>
+		<table name="store" generator_rows="100" >
+			<column name="store_id" type="integer" jt="4" mandatory="y" />
+			<column name="manager_staff_id" type="integer" jt="4" mandatory="y" />
+			<column name="address_id" type="integer" jt="4" mandatory="y" />
+			<column name="last_update" type="timestamp" jt="93" mandatory="y" />
 			<index name="pk_store" unique="PRIMARY_KEY" >
 				<column name="store_id" />
-			</index>
-			<index name="idx_unique_manager" unique="UNIQUE" >
-				<column name="manager_staff_id" />
 			</index>
 			<index name="idx_fk_address_id" unique="NORMAL" >
 				<column name="address_id" />
 			</index>
+			<index name="sqlite_autoindex_store_1" unique="UNIQUE" >
+				<column name="manager_staff_id" />
+			</index>
+			<fk name="Fk_store" to_schema="Default" to_table="staff" >
+				<fk_column name="manager_staff_id" pk="staff_id" />
+			</fk>
+			<fk name="Fk_store" to_schema="Default" to_table="address" >
+				<fk_column name="address_id" pk="address_id" />
+			</fk>
 		</table>
-		<view name="actor_info" >
-			<view_script><![CDATA[select `a`.`actor_id` AS `actor_id`,`a`.`first_name` AS `first_name`,`a`.`last_name` AS `last_name`,group_concat(distinct concat(`c`.`name`,': ',convert((select group_concat(`f`.`title` order by `f`.`title` ASC separator ', ') from ((`sakila`.`film` `f` join `sakila`.`film_category` `fc` on((`f`.`film_id` = `fc`.`film_id`))) join `sakila`.`film_actor` `fa` on((`f`.`film_id` = `fa`.`film_id`))) where ((`fc`.`category_id` = `c`.`category_id`) and (`fa`.`actor_id` = `a`.`actor_id`))) using utf8mb4)) order by `c`.`name` ASC separator '; ') AS `film_info` from (((`sakila`.`actor` `a` left join `sakila`.`film_actor` `fa` on((`a`.`actor_id` = `fa`.`actor_id`))) left join `sakila`.`film_category` `fc` on((`fa`.`film_id` = `fc`.`film_id`))) left join `sakila`.`category` `c` on((`fc`.`category_id` = `c`.`category_id`))) group by `a`.`actor_id`,`a`.`first_name`,`a`.`last_name`]]></view_script>
-		</view>
-		<view name="customer_list" >
-			<view_script><![CDATA[select `cu`.`customer_id` AS `ID`,concat(`cu`.`first_name`,' ',`cu`.`last_name`) AS `name`,`a`.`address` AS `address`,`a`.`postal_code` AS `zip code`,`a`.`phone` AS `phone`,`sakila`.`city`.`city` AS `city`,`sakila`.`country`.`country` AS `country`,if(`cu`.`active`,'active','') AS `notes`,`cu`.`store_id` AS `SID` from (((`sakila`.`customer` `cu` join `sakila`.`address` `a` on((`cu`.`address_id` = `a`.`address_id`))) join `sakila`.`city` on((`a`.`city_id` = `sakila`.`city`.`city_id`))) join `sakila`.`country` on((`sakila`.`city`.`country_id` = `sakila`.`country`.`country_id`)))]]></view_script>
-		</view>
-		<view name="film_list" >
-			<view_script><![CDATA[select `sakila`.`film`.`film_id` AS `FID`,`sakila`.`film`.`title` AS `title`,`sakila`.`film`.`description` AS `description`,`sakila`.`category`.`name` AS `category`,`sakila`.`film`.`rental_rate` AS `price`,`sakila`.`film`.`length` AS `length`,`sakila`.`film`.`rating` AS `rating`,group_concat(concat(`sakila`.`actor`.`first_name`,' ',`sakila`.`actor`.`last_name`) separator ', ') AS `actors` from ((((`sakila`.`category` left join `sakila`.`film_category` on((`sakila`.`category`.`category_id` = `sakila`.`film_category`.`category_id`))) left join `sakila`.`film` on((`sakila`.`film_category`.`film_id` = `sakila`.`film`.`film_id`))) join `sakila`.`film_actor` on((`sakila`.`film`.`film_id` = `sakila`.`film_actor`.`film_id`))) join `sakila`.`actor` on((`sakila`.`film_actor`.`actor_id` = `sakila`.`actor`.`actor_id`))) group by `sakila`.`film`.`film_id`,`sakila`.`category`.`name`]]></view_script>
-		</view>
-		<view name="nicer_but_slower_film_list" >
-			<view_script><![CDATA[select `sakila`.`film`.`film_id` AS `FID`,`sakila`.`film`.`title` AS `title`,`sakila`.`film`.`description` AS `description`,`sakila`.`category`.`name` AS `category`,`sakila`.`film`.`rental_rate` AS `price`,`sakila`.`film`.`length` AS `length`,`sakila`.`film`.`rating` AS `rating`,group_concat(concat(concat(upper(substr(`sakila`.`actor`.`first_name`,1,1)),lower(substr(`sakila`.`actor`.`first_name`,2,length(`sakila`.`actor`.`first_name`))),' ',concat(upper(substr(`sakila`.`actor`.`last_name`,1,1)),lower(substr(`sakila`.`actor`.`last_name`,2,length(`sakila`.`actor`.`last_name`)))))) separator ', ') AS `actors` from ((((`sakila`.`category` left join `sakila`.`film_category` on((`sakila`.`category`.`category_id` = `sakila`.`film_category`.`category_id`))) left join `sakila`.`film` on((`sakila`.`film_category`.`film_id` = `sakila`.`film`.`film_id`))) join `sakila`.`film_actor` on((`sakila`.`film`.`film_id` = `sakila`.`film_actor`.`film_id`))) join `sakila`.`actor` on((`sakila`.`film_actor`.`actor_id` = `sakila`.`actor`.`actor_id`))) group by `sakila`.`film`.`film_id`,`sakila`.`category`.`name`]]></view_script>
-		</view>
-		<view name="sales_by_film_category" >
-			<view_script><![CDATA[select `c`.`name` AS `category`,sum(`p`.`amount`) AS `total_sales` from (((((`sakila`.`payment` `p` join `sakila`.`rental` `r` on((`p`.`rental_id` = `r`.`rental_id`))) join `sakila`.`inventory` `i` on((`r`.`inventory_id` = `i`.`inventory_id`))) join `sakila`.`film` `f` on((`i`.`film_id` = `f`.`film_id`))) join `sakila`.`film_category` `fc` on((`f`.`film_id` = `fc`.`film_id`))) join `sakila`.`category` `c` on((`fc`.`category_id` = `c`.`category_id`))) group by `c`.`name` order by `total_sales` desc]]></view_script>
-		</view>
-		<view name="sales_by_store" >
-			<view_script><![CDATA[select concat(convert(`c`.`city` using utf8mb4),',',`cy`.`country`) AS `store`,concat(`m`.`first_name`,' ',`m`.`last_name`) AS `manager`,sum(`p`.`amount`) AS `total_sales` from (((((((`sakila`.`payment` `p` join `sakila`.`rental` `r` on((`p`.`rental_id` = `r`.`rental_id`))) join `sakila`.`inventory` `i` on((`r`.`inventory_id` = `i`.`inventory_id`))) join `sakila`.`store` `s` on((`i`.`store_id` = `s`.`store_id`))) join `sakila`.`address` `a` on((`s`.`address_id` = `a`.`address_id`))) join `sakila`.`city` `c` on((`a`.`city_id` = `c`.`city_id`))) join `sakila`.`country` `cy` on((`c`.`country_id` = `cy`.`country_id`))) join `sakila`.`staff` `m` on((`s`.`manager_staff_id` = `m`.`staff_id`))) group by `s`.`store_id` order by `cy`.`country`,`c`.`city`]]></view_script>
-		</view>
-		<view name="staff_list" >
-			<view_script><![CDATA[select `s`.`staff_id` AS `ID`,concat(`s`.`first_name`,' ',`s`.`last_name`) AS `name`,`a`.`address` AS `address`,`a`.`postal_code` AS `zip code`,`a`.`phone` AS `phone`,`sakila`.`city`.`city` AS `city`,`sakila`.`country`.`country` AS `country`,`s`.`store_id` AS `SID` from (((`sakila`.`staff` `s` join `sakila`.`address` `a` on((`s`.`address_id` = `a`.`address_id`))) join `sakila`.`city` on((`a`.`city_id` = `sakila`.`city`.`city_id`))) join `sakila`.`country` on((`sakila`.`city`.`country_id` = `sakila`.`country`.`country_id`)))]]></view_script>
-		</view>
-		<procedure name="film_in_stock" id="Procedure_a29b14" isSystem="false" params_known="n" >
-			<string><![CDATA[CREATE PROCEDURE sakila.film_in_stock ( IN p_film_id INT, IN p_store_id INT, OUT p_film_count INT )
-BEGIN
-     SELECT inventory_id
-     FROM inventory
-     WHERE film_id = p_film_id
-     AND store_id = p_store_id
-     AND inventory_in_stock(inventory_id);
-     SELECT COUNT(*)
-     FROM inventory
-     WHERE film_id = p_film_id
-     AND store_id = p_store_id
-     AND inventory_in_stock(inventory_id)
-     INTO p_film_count;
-END]]></string>
-		</procedure>
-		<procedure name="film_not_in_stock" id="Procedure_5b92870" isSystem="false" params_known="n" >
-			<string><![CDATA[CREATE PROCEDURE sakila.film_not_in_stock ( IN p_film_id INT, IN p_store_id INT, OUT p_film_count INT )
-BEGIN
-     SELECT inventory_id
-     FROM inventory
-     WHERE film_id = p_film_id
-     AND store_id = p_store_id
-     AND NOT inventory_in_stock(inventory_id);
-     SELECT COUNT(*)
-     FROM inventory
-     WHERE film_id = p_film_id
-     AND store_id = p_store_id
-     AND NOT inventory_in_stock(inventory_id)
-     INTO p_film_count;
-END]]></string>
-		</procedure>
-		<procedure name="rewards_report" id="Procedure_23e71f4" isSystem="false" params_known="n" >
-			<string><![CDATA[CREATE PROCEDURE sakila.rewards_report ( 
-    IN min_monthly_purchases TINYINT UNSIGNED
-    , IN min_dollar_amount_purchased DECIMAL(10,2)
-    , OUT count_rewardees INT
- )
-proc: BEGIN
-    DECLARE last_month_start DATE;
-    DECLARE last_month_end DATE;
-    /* Some sanity checks... */
-    IF min_monthly_purchases = 0 THEN
-        SELECT 'Minimum monthly purchases parameter must be > 0';
-        LEAVE proc;
-    END IF;
-    IF min_dollar_amount_purchased = 0.00 THEN
-        SELECT 'Minimum monthly dollar amount purchased parameter must be > $0.00';
-        LEAVE proc;
-    END IF;
-    /* Determine start and end time periods */
-    SET last_month_start = DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH);
-    SET last_month_start = STR_TO_DATE(CONCAT(YEAR(last_month_start),'-',MONTH(last_month_start),'-01'),'%Y-%m-%d');
-    SET last_month_end = LAST_DAY(last_month_start);
-    /*
-        Create a temporary storage area for
-        Customer IDs.
-    */
-    CREATE TEMPORARY TABLE tmpCustomer (customer_id SMALLINT UNSIGNED NOT NULL PRIMARY KEY);
-    /*
-        Find all customers meeting the
-        monthly purchase requirements
-    */
-    INSERT INTO tmpCustomer (customer_id)
-    SELECT p.customer_id
-    FROM payment AS p
-    WHERE DATE(p.payment_date) BETWEEN last_month_start AND last_month_end
-    GROUP BY customer_id
-    HAVING SUM(p.amount) > min_dollar_amount_purchased
-    AND COUNT(customer_id) > min_monthly_purchases;
-    /* Populate OUT parameter with count of found customers */
-    SELECT COUNT(*) FROM tmpCustomer INTO count_rewardees;
-    /*
-        Output ALL customer information of matching rewardees.
-        Customize output as needed.
-    */
-    SELECT c.*
-    FROM tmpCustomer AS t
-    INNER JOIN customer AS c ON t.customer_id = c.customer_id;
-    /* Clean up */
-    DROP TABLE tmpCustomer;
-END]]></string>
-			<comment><![CDATA[Provides a customizable report on best customers]]></comment>
-		</procedure>
-		<trigger name="del_film" id="Trigger_467551" isSystem="false" >
-			<string><![CDATA[CREATE TRIGGER del_film AFTER DELETE ON film FOR EACH ROW BEGIN
-    DELETE FROM film_text WHERE film_id = old.film_id;
-  END;]]></string>
-		</trigger>
-		<trigger name="ins_film" id="Trigger_2fb401b" isSystem="false" >
-			<string><![CDATA[CREATE TRIGGER ins_film AFTER INSERT ON film FOR EACH ROW BEGIN
-    INSERT INTO film_text (film_id, title, description)
-        VALUES (new.film_id, new.title, new.description);
-  END;]]></string>
-		</trigger>
-		<trigger name="upd_film" id="Trigger_d0b923" isSystem="false" >
-			<string><![CDATA[CREATE TRIGGER upd_film AFTER UPDATE ON film FOR EACH ROW BEGIN
-    IF (old.title != new.title) OR (old.description != new.description) OR (old.film_id != new.film_id)
-    THEN
-        UPDATE film_text
-            SET title=new.title,
-                description=new.description,
-                film_id=new.film_id
-        WHERE film_id=old.film_id;
-    END IF;
-  END;]]></string>
-		</trigger>
-		<function name="get_customer_balance" id="Function_10a32fa" isSystem="false" params_known="n" >
-			<string><![CDATA[CREATE FUNCTION sakila.get_customer_balance ( p_customer_id INT, p_effective_date DATETIME ) RETURNS decimal(5,2)
-BEGIN
-       #OK, WE NEED TO CALCULATE THE CURRENT BALANCE GIVEN A CUSTOMER_ID AND A DATE
-       #THAT WE WANT THE BALANCE TO BE EFFECTIVE FOR. THE BALANCE IS:
-       #   1) RENTAL FEES FOR ALL PREVIOUS RENTALS
-       #   2) ONE DOLLAR FOR EVERY DAY THE PREVIOUS RENTALS ARE OVERDUE
-       #   3) IF A FILM IS MORE THAN RENTAL_DURATION * 2 OVERDUE, CHARGE THE REPLACEMENT_COST
-       #   4) SUBTRACT ALL PAYMENTS MADE BEFORE THE DATE SPECIFIED
-  DECLARE v_rentfees DECIMAL(5,2); #FEES PAID TO RENT THE VIDEOS INITIALLY
-  DECLARE v_overfees INTEGER;      #LATE FEES FOR PRIOR RENTALS
-  DECLARE v_payments DECIMAL(5,2); #SUM OF PAYMENTS MADE PREVIOUSLY
-  SELECT IFNULL(SUM(film.rental_rate),0) INTO v_rentfees
-    FROM film, inventory, rental
-    WHERE film.film_id = inventory.film_id
-      AND inventory.inventory_id = rental.inventory_id
-      AND rental.rental_date <= p_effective_date
-      AND rental.customer_id = p_customer_id;
-  SELECT IFNULL(SUM(IF((TO_DAYS(rental.return_date) - TO_DAYS(rental.rental_date)) > film.rental_duration,
-        ((TO_DAYS(rental.return_date) - TO_DAYS(rental.rental_date)) - film.rental_duration),0)),0) INTO v_overfees
-    FROM rental, inventory, film
-    WHERE film.film_id = inventory.film_id
-      AND inventory.inventory_id = rental.inventory_id
-      AND rental.rental_date <= p_effective_date
-      AND rental.customer_id = p_customer_id;
-
-  SELECT IFNULL(SUM(payment.amount),0) INTO v_payments
-    FROM payment
-    WHERE payment.payment_date <= p_effective_date
-    AND payment.customer_id = p_customer_id;
-  RETURN v_rentfees + v_overfees - v_payments;
-END]]></string>
-		</function>
-		<function name="inventory_held_by_customer" id="Function_4e18206" isSystem="false" params_known="n" >
-			<string><![CDATA[CREATE FUNCTION sakila.inventory_held_by_customer ( p_inventory_id INT ) RETURNS int(11)
-BEGIN
-  DECLARE v_customer_id INT;
-  DECLARE EXIT HANDLER FOR NOT FOUND RETURN NULL;
-  SELECT customer_id INTO v_customer_id
-  FROM rental
-  WHERE return_date IS NULL
-  AND inventory_id = p_inventory_id;
-  RETURN v_customer_id;
-END]]></string>
-		</function>
-		<function name="inventory_in_stock" id="Function_1603481" isSystem="false" params_known="n" >
-			<string><![CDATA[CREATE FUNCTION sakila.inventory_in_stock ( p_inventory_id INT ) RETURNS tinyint(1)
-BEGIN
-    DECLARE v_rentals INT;
-    DECLARE v_out     INT;
-    #AN ITEM IS IN-STOCK IF THERE ARE EITHER NO ROWS IN THE rental TABLE
-    #FOR THE ITEM OR ALL ROWS HAVE return_date POPULATED
-    SELECT COUNT(*) INTO v_rentals
-    FROM rental
-    WHERE inventory_id = p_inventory_id;
-    IF v_rentals = 0 THEN
-      RETURN TRUE;
-    END IF;
-    SELECT COUNT(rental_id) INTO v_out
-    FROM inventory LEFT JOIN rental USING(inventory_id)
-    WHERE inventory.inventory_id = p_inventory_id
-    AND rental.return_date IS NULL;
-    IF v_out > 0 THEN
-      RETURN FALSE;
-    ELSE
-      RETURN TRUE;
-    END IF;
-END]]></string>
-		</function>
 	</schema>
-	<connector name="MySql" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.14.jar" driver_desc="Standard" host="localhost" port="3306" instance="sakila" user="root" passwd="QS5qb2tlci4x" />
-	<connector name="Sqlite" database="Sqlite" driver_class="org.sqlite.JDBC" driver_jar="sqlite-jdbc-3.34.0.jar" driver_desc="Standard" host="localhost" port="7210" instance="D:/Descargas/result/data.sqlite" />
-	<layout name="Default Layout" id="Layout_c99d58" show_relation="name" >
-		<entity schema="sakila" name="actor_info" color="3986C1" x="736" y="832" />
-		<entity schema="sakila" name="customer_list" color="3986C1" x="48" y="832" />
-		<entity schema="sakila" name="nicer_but_slower_film_list" color="3986C1" x="944" y="656" />
-		<entity schema="sakila" name="sales_by_film_category" color="3986C1" x="736" y="656" />
-		<entity schema="sakila" name="sales_by_store" color="3986C1" x="944" y="768" />
-		<entity schema="sakila" name="staff" color="3986C1" x="208" y="48" />
-		<entity schema="sakila" name="staff_list" color="3986C1" x="384" y="48" />
-		<entity schema="sakila" name="payment" color="3986C1" x="608" y="112" />
-		<entity schema="sakila" name="rental" color="3986C1" x="784" y="112" />
-		<entity schema="sakila" name="inventory" color="3986C1" x="432" y="160" />
-		<entity schema="sakila" name="store" color="3986C1" x="192" y="336" />
-		<entity schema="sakila" name="film" color="3986C1" x="384" y="336" />
-		<entity schema="sakila" name="film_actor" color="3986C1" x="608" y="336" />
-		<entity schema="sakila" name="film_category" color="3986C1" x="784" y="336" />
-		<entity schema="sakila" name="film_list" color="3986C1" x="944" y="496" />
-		<entity schema="sakila" name="film_text" color="3986C1" x="784" y="496" />
-		<entity schema="sakila" name="language" color="3986C1" x="608" y="496" />
-		<entity schema="sakila" name="customer" color="3986C1" x="208" y="576" />
-		<entity schema="sakila" name="city" color="3986C1" x="384" y="656" />
-		<entity schema="sakila" name="country" color="3986C1" x="560" y="656" />
-		<entity schema="sakila" name="category" color="3986C1" x="208" y="832" />
-		<entity schema="sakila" name="address" color="3986C1" x="384" y="832" />
-		<entity schema="sakila" name="actor" color="3986C1" x="560" y="832" />
-		<script name="actor" id="Editor_5b45929" language="SQL" >
-			<string><![CDATA[DELETE FROM actor;]]></string>
+	<connector name="Sqlite" database="Sqlite" driver_class="org.sqlite.JDBC" driver_jar="sqlite-jdbc-3.34.0.jar" driver_desc="Standard" host="localhost" port="7210" instance="C:/Users/jorge/code/castelao/21-22/bd_03/movies.db" />
+	<layout name="Default Layout" id="Layout_371687b" show_relation="name" >
+		<entity schema="Default" name="film" color="C7F4BE" x="256" y="320" />
+		<entity schema="Default" name="category" color="BED3F4" x="48" y="592" />
+		<entity schema="Default" name="actor" color="C7F4BE" x="48" y="128" />
+		<entity schema="Default" name="film_actor" color="C7F4BE" x="256" y="160" />
+		<entity schema="Default" name="film_category" color="C7F4BE" x="48" y="448" />
+		<entity schema="Default" name="city" color="F4DDBE" x="496" y="176" />
+		<entity schema="Default" name="inventory" color="BED3F4" x="480" y="528" />
+		<entity schema="Default" name="customer" color="BED3F4" x="1056" y="48" />
+		<entity schema="Default" name="address" color="BED3F4" x="688" y="224" />
+		<entity schema="Default" name="country" color="F4DDBE" x="496" y="352" />
+		<entity schema="Default" name="store" color="BED3F4" x="688" y="464" />
+		<entity schema="Default" name="payment" color="BED3F4" x="880" y="96" />
+		<entity schema="Default" name="staff" color="BED3F4" x="880" y="336" />
+		<entity schema="Default" name="rental" color="BED3F4" x="1056" y="464" />
+		<entity schema="Default" name="language" color="BED3F4" x="256" y="624" />
+		<entity schema="Default" name="film_text" color="C7F4BE" x="48" y="320" />
+		<browser id="Browse_5aed491" name="film_text" confirm_updates="y" >
+			<browse_table schema="Default" entity="film_text" x="20" y="20" width="400" height="300" />
+		</browser>
+	</layout>
+	<layout name="Sample Layout with Tools" id="Layout_427060e" show_column_type="y" show_relation="name" >
+		<entity schema="Default" name="actor" color="C7F4BE" x="496" y="240" />
+		<entity schema="Default" name="address" color="BED3F4" x="992" y="1056" />
+		<entity schema="Default" name="category" color="BED3F4" x="1216" y="1056" />
+		<entity schema="Default" name="city" color="F4DDBE" x="752" y="80" />
+		<entity schema="Default" name="country" color="F4DDBE" x="976" y="80" />
+		<entity schema="Default" name="customer" color="BED3F4" x="1216" y="1296" />
+		<entity schema="Default" name="film" color="C7F4BE" x="240" y="400" />
+		<entity schema="Default" name="film_actor" color="C7F4BE" x="272" y="240" />
+		<entity schema="Default" name="film_category" color="C7F4BE" x="48" y="240" />
+		<entity schema="Default" name="film_text" color="C7F4BE" x="80" y="80" />
+		<entity schema="Default" name="inventory" color="BED3F4" x="992" y="1296" />
+		<entity schema="Default" name="language" color="BED3F4" x="768" y="1296" />
+		<entity schema="Default" name="payment" color="BED3F4" x="752" y="1072" />
+		<entity schema="Default" name="rental" color="BED3F4" x="768" y="832" />
+		<entity schema="Default" name="staff" color="BED3F4" x="992" y="768" />
+		<entity schema="Default" name="store" color="BED3F4" x="1216" y="880" />
+		<callout x="272" y="128" pointer="Round" >
+			<comment><![CDATA[This is a sample layout with tools: relational data browse, query builder and SQL editor. 
+For better understanding the schema create multiple layouts with the same or different tables. 
+Layouts are saved together with the schema to project file. 
+Double-click any table, column or foreign key to edit.]]></comment>
+		</callout>
+		<group name="address" color="ECF0F7" >
+			<entity schema="Default" name="address" />
+			<entity schema="Default" name="category" />
+			<entity schema="Default" name="customer" />
+			<entity schema="Default" name="inventory" />
+			<entity schema="Default" name="language" />
+			<entity schema="Default" name="payment" />
+			<entity schema="Default" name="rental" />
+			<entity schema="Default" name="staff" />
+			<entity schema="Default" name="store" />
+		</group>
+		<group name="city" color="F7F2EC" >
+			<entity schema="Default" name="city" />
+			<entity schema="Default" name="country" />
+		</group>
+		<group name="film_actor" color="EEF7EC" >
+			<entity schema="Default" name="film_actor" />
+			<entity schema="Default" name="actor" />
+			<entity schema="Default" name="film" />
+			<entity schema="Default" name="film_category" />
+			<entity schema="Default" name="film_text" />
+		</group>
+		<script name="Sample SQL Editor" id="Editor_217c7cd" language="SQL" >
+			<string><![CDATA[SELECT * 
+FROM
+	film_actor r;]]></string>
 		</script>
-		<script name="address" id="Editor_17abc7d" language="SQL" >
-			<string><![CDATA[DELETE FROM address;]]></string>
-		</script>
-		<script name="category" id="Editor_2cde04f" language="SQL" >
-			<string><![CDATA[DELETE FROM category;]]></string>
-		</script>
-		<script name="city" id="Editor_1f26f3c" language="SQL" >
-			<string><![CDATA[DELETE FROM city;]]></string>
-		</script>
-		<script name="country" id="Editor_1bc6a3e" language="SQL" >
-			<string><![CDATA[DELETE FROM country;]]></string>
-		</script>
-		<script name="customer" id="Editor_77f65b" language="SQL" >
-			<string><![CDATA[DELETE FROM customer;]]></string>
-		</script>
-		<script name="film" id="Editor_4afd089" language="SQL" >
-			<string><![CDATA[DELETE FROM film;]]></string>
-		</script>
-		<script name="film_actor" id="Editor_400e182" language="SQL" >
-			<string><![CDATA[DELETE FROM film_actor;]]></string>
-		</script>
-		<script name="film_category" id="Editor_4694c34" language="SQL" >
-			<string><![CDATA[DELETE FROM film_category;]]></string>
-		</script>
-		<script name="film_text" id="Editor_331043f" language="SQL" >
-			<string><![CDATA[DELETE FROM film_text;]]></string>
-		</script>
-		<script name="inventory" id="Editor_5256968" language="SQL" >
-			<string><![CDATA[DELETE FROM inventory;]]></string>
-		</script>
-		<script name="language" id="Editor_14f7bff" language="SQL" >
-			<string><![CDATA[DELETE FROM language;]]></string>
-		</script>
-		<script name="payment" id="Editor_2a6ec5d" language="SQL" >
-			<string><![CDATA[DELETE FROM payment;]]></string>
-		</script>
-		<script name="rental" id="Editor_1b53b7a" language="SQL" >
-			<string><![CDATA[DELETE FROM rental;]]></string>
-		</script>
-		<script name="staff_list" id="Editor_46a8648" language="SQL" >
-			<string><![CDATA[DELETE FROM staff_list;]]></string>
-		</script>
-		<script name="store" id="Editor_a989e1" language="SQL" >
-			<string><![CDATA[DELETE FROM store;]]></string>
-		</script>
+		<browser id="Browse_169552d" name="Sample Relational Data Browse" confirm_updates="y" >
+			<browse_table schema="Default" entity="film_actor" x="20" y="20" width="400" height="300" >
+				<browse_table schema="Default" entity="actor" fk="Fk_film_actor" x="440" y="20" width="500" height="350" record_view="y" />
+			</browse_table>
+		</browser>
+		<query id="Query_54023c1" name="Sample Query Builder" >
+			<query_table schema="Default" name="film_actor" alias="fa" x="48" y="48" >
+				<column name="actor_id" />
+				<column name="film_id" />
+				<column name="last_update" />
+				<query_table schema="Default" name="actor" alias="a" x="224" y="48" fk="Fk_film_actor" type="Inner Join" >
+					<column name="actor_id" />
+					<column name="first_name" />
+					<column name="last_name" />
+					<column name="last_update" />
+				</query_table>
+			</query_table>
+		</query>
 	</layout>
 </project>
