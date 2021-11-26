@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="mysql_pokemon.sql" id="Project_4638c83" template="Default" database="MySql" >
+	<schema name="pokemon" catalogname="pokemon" >
+		<table name="efecto_secundario" >
+			<column name="id_efecto_secundario" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="efecto_secundario" type="varchar" length="30" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_efecto_secundario" unique="PRIMARY_KEY" >
+				<column name="id_efecto_secundario" />
+			</index>
+		</table>
+		<table name="estadisticas_base" >
+			<column name="numero_pokedex" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ps" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="ataque" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="defensa" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="especial" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="velocidad" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_estadisticas_base" unique="PRIMARY_KEY" >
+				<column name="numero_pokedex" />
+			</index>
+			<fk name="estadisticas_base_ibfk_1" to_schema="pokemon" to_table="pokemon" >
+				<fk_column name="numero_pokedex" pk="numero_pokedex" />
+			</fk>
+		</table>
+		<table name="evoluciona_de" >
+			<column name="pokemon_evolucionado" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="pokemon_origen" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_evoluciona_de" unique="PRIMARY_KEY" >
+				<column name="pokemon_evolucionado" />
+				<column name="pokemon_origen" />
+			</index>
+			<index name="pokemon_origen" unique="NORMAL" >
+				<column name="pokemon_origen" />
+			</index>
+			<fk name="evoluciona_de_ibfk_1" to_schema="pokemon" to_table="pokemon" >
+				<fk_column name="pokemon_evolucionado" pk="numero_pokedex" />
+			</fk>
+			<fk name="evoluciona_de_ibfk_2" to_schema="pokemon" to_table="pokemon" >
+				<fk_column name="pokemon_origen" pk="numero_pokedex" />
+			</fk>
+		</table>
+		<table name="forma_aprendizaje" >
+			<column name="id_forma_aprendizaje" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="id_tipo_aprendizaje" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_forma_aprendizaje" unique="PRIMARY_KEY" >
+				<column name="id_forma_aprendizaje" />
+			</index>
+			<index name="id_tipo_aprendizaje" unique="NORMAL" >
+				<column name="id_tipo_aprendizaje" />
+			</index>
+			<fk name="forma_aprendizaje_ibfk_1" to_schema="pokemon" to_table="tipo_forma_aprendizaje" >
+				<fk_column name="id_tipo_aprendizaje" pk="id_tipo_aprendizaje" />
+			</fk>
+		</table>
+		<table name="forma_evolucion" >
+			<column name="id_forma_evolucion" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="tipo_evolucion" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_forma_evolucion" unique="PRIMARY_KEY" >
+				<column name="id_forma_evolucion" />
+			</index>
+			<index name="tipo_evolucion" unique="NORMAL" >
+				<column name="tipo_evolucion" />
+			</index>
+			<fk name="forma_evolucion_ibfk_1" to_schema="pokemon" to_table="tipo_evolucion" >
+				<fk_column name="tipo_evolucion" pk="id_tipo_evolucion" />
+			</fk>
+		</table>
+		<table name="mo" >
+			<column name="id_forma_aprendizaje" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="MO" type="varchar" length="5" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_mo" unique="PRIMARY_KEY" >
+				<column name="id_forma_aprendizaje" />
+			</index>
+			<fk name="mo_ibfk_1" to_schema="pokemon" to_table="forma_aprendizaje" >
+				<fk_column name="id_forma_aprendizaje" pk="id_forma_aprendizaje" />
+			</fk>
+		</table>
+		<table name="movimiento" >
+			<column name="id_movimiento" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="nombre" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
+			<column name="potencia" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="precision_mov" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="descripcion" type="varchar" length="500" decimal="0" jt="12" mandatory="y" />
+			<column name="pp" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="id_tipo" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="prioridad" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<defo>0</defo>
+			</column>
+			<index name="pk_movimiento" unique="PRIMARY_KEY" >
+				<column name="id_movimiento" />
+			</index>
+			<index name="id_tipo" unique="NORMAL" >
+				<column name="id_tipo" />
+			</index>
+			<fk name="movimiento_ibfk_1" to_schema="pokemon" to_table="tipo" >
+				<fk_column name="id_tipo" pk="id_tipo" />
+			</fk>
+		</table>
+		<table name="movimiento_efecto_secundario" >
+			<column name="id_movimiento" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="id_efecto_secundario" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="probabilidad" type="double" length="22" decimal="0" jt="8" mandatory="y" />
+			<index name="pk_movimiento_efecto_secundario" unique="PRIMARY_KEY" >
+				<column name="id_movimiento" />
+				<column name="id_efecto_secundario" />
+			</index>
+			<index name="id_efecto_secundario" unique="NORMAL" >
+				<column name="id_efecto_secundario" />
+			</index>
+			<fk name="movimiento_efecto_secundario_ibfk_2" to_schema="pokemon" to_table="efecto_secundario" >
+				<fk_column name="id_efecto_secundario" pk="id_efecto_secundario" />
+			</fk>
+			<fk name="movimiento_efecto_secundario_ibfk_1" to_schema="pokemon" to_table="movimiento" >
+				<fk_column name="id_movimiento" pk="id_movimiento" />
+			</fk>
+		</table>
+		<table name="mt" >
+			<column name="id_forma_aprendizaje" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="MT" type="varchar" length="5" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_mt" unique="PRIMARY_KEY" >
+				<column name="id_forma_aprendizaje" />
+			</index>
+			<fk name="mt_ibfk_1" to_schema="pokemon" to_table="forma_aprendizaje" >
+				<fk_column name="id_forma_aprendizaje" pk="id_forma_aprendizaje" />
+			</fk>
+		</table>
+		<table name="nivel_aprendizaje" >
+			<column name="id_forma_aprendizaje" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="nivel" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_nivel_aprendizaje" unique="PRIMARY_KEY" >
+				<column name="id_forma_aprendizaje" />
+			</index>
+			<fk name="nivel_aprendizaje_ibfk_1" to_schema="pokemon" to_table="forma_aprendizaje" >
+				<fk_column name="id_forma_aprendizaje" pk="id_forma_aprendizaje" />
+			</fk>
+		</table>
+		<table name="nivel_evolucion" >
+			<column name="id_forma_evolucion" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="nivel" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_nivel_evolucion" unique="PRIMARY_KEY" >
+				<column name="id_forma_evolucion" />
+			</index>
+			<fk name="nivel_evolucion_ibfk_1" to_schema="pokemon" to_table="forma_evolucion" >
+				<fk_column name="id_forma_evolucion" pk="id_forma_evolucion" />
+			</fk>
+		</table>
+		<table name="piedra" >
+			<column name="id_forma_evolucion" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="id_tipo_piedra" type="int" length="10" decimal="0" jt="4" />
+			<index name="pk_piedra" unique="PRIMARY_KEY" >
+				<column name="id_forma_evolucion" />
+			</index>
+			<index name="id_tipo_piedra" unique="NORMAL" >
+				<column name="id_tipo_piedra" />
+			</index>
+			<fk name="piedra_ibfk_2" to_schema="pokemon" to_table="forma_evolucion" >
+				<fk_column name="id_forma_evolucion" pk="id_forma_evolucion" />
+			</fk>
+			<fk name="piedra_ibfk_1" to_schema="pokemon" to_table="tipo_piedra" >
+				<fk_column name="id_tipo_piedra" pk="id_tipo_piedra" />
+			</fk>
+		</table>
+		<table name="pokemon" >
+			<column name="numero_pokedex" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="nombre" type="varchar" length="15" decimal="0" jt="12" mandatory="y" />
+			<column name="peso" type="double" length="22" decimal="0" jt="8" mandatory="y" />
+			<column name="altura" type="double" length="22" decimal="0" jt="8" mandatory="y" />
+			<index name="pk_pokemon" unique="PRIMARY_KEY" >
+				<column name="numero_pokedex" />
+			</index>
+		</table>
+		<table name="pokemon_forma_evolucion" >
+			<column name="numero_pokedex" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="id_forma_evolucion" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_pokemon_forma_evolucion" unique="PRIMARY_KEY" >
+				<column name="numero_pokedex" />
+				<column name="id_forma_evolucion" />
+			</index>
+			<index name="id_forma_evolucion" unique="NORMAL" >
+				<column name="id_forma_evolucion" />
+			</index>
+			<fk name="pokemon_forma_evolucion_ibfk_2" to_schema="pokemon" to_table="forma_evolucion" >
+				<fk_column name="id_forma_evolucion" pk="id_forma_evolucion" />
+			</fk>
+			<fk name="pokemon_forma_evolucion_ibfk_1" to_schema="pokemon" to_table="pokemon" >
+				<fk_column name="numero_pokedex" pk="numero_pokedex" />
+			</fk>
+		</table>
+		<table name="pokemon_movimiento_forma" >
+			<column name="numero_pokedex" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="id_movimiento" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="id_forma_aprendizaje" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_pokemon_movimiento_forma" unique="PRIMARY_KEY" >
+				<column name="numero_pokedex" />
+				<column name="id_movimiento" />
+				<column name="id_forma_aprendizaje" />
+			</index>
+			<index name="id_forma_aprendizaje" unique="NORMAL" >
+				<column name="id_forma_aprendizaje" />
+			</index>
+			<index name="id_movimiento" unique="NORMAL" >
+				<column name="id_movimiento" />
+			</index>
+			<fk name="pokemon_movimiento_forma_ibfk_3" to_schema="pokemon" to_table="forma_aprendizaje" >
+				<fk_column name="id_forma_aprendizaje" pk="id_forma_aprendizaje" />
+			</fk>
+			<fk name="pokemon_movimiento_forma_ibfk_2" to_schema="pokemon" to_table="movimiento" >
+				<fk_column name="id_movimiento" pk="id_movimiento" />
+			</fk>
+			<fk name="pokemon_movimiento_forma_ibfk_1" to_schema="pokemon" to_table="pokemon" >
+				<fk_column name="numero_pokedex" pk="numero_pokedex" />
+			</fk>
+		</table>
+		<table name="pokemon_tipo" >
+			<column name="numero_pokedex" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="id_tipo" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_pokemon_tipo" unique="PRIMARY_KEY" >
+				<column name="numero_pokedex" />
+				<column name="id_tipo" />
+			</index>
+			<index name="id_tipo" unique="NORMAL" >
+				<column name="id_tipo" />
+			</index>
+			<fk name="pokemon_tipo_ibfk_1" to_schema="pokemon" to_table="pokemon" >
+				<fk_column name="numero_pokedex" pk="numero_pokedex" />
+			</fk>
+			<fk name="pokemon_tipo_ibfk_2" to_schema="pokemon" to_table="tipo" >
+				<fk_column name="id_tipo" pk="id_tipo" />
+			</fk>
+		</table>
+		<table name="tipo" >
+			<column name="id_tipo" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="nombre" type="varchar" length="10" decimal="0" jt="12" mandatory="y" />
+			<column name="id_tipo_ataque" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_tipo" unique="PRIMARY_KEY" >
+				<column name="id_tipo" />
+			</index>
+			<index name="id_tipo_ataque" unique="NORMAL" >
+				<column name="id_tipo_ataque" />
+			</index>
+			<fk name="tipo_ibfk_1" to_schema="pokemon" to_table="tipo_ataque" >
+				<fk_column name="id_tipo_ataque" pk="id_tipo_ataque" />
+			</fk>
+		</table>
+		<table name="tipo_ataque" >
+			<column name="id_tipo_ataque" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="tipo" type="varchar" length="8" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_tipo_ataque" unique="PRIMARY_KEY" >
+				<column name="id_tipo_ataque" />
+			</index>
+		</table>
+		<table name="tipo_evolucion" >
+			<column name="id_tipo_evolucion" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="tipo_evolucion" type="varchar" length="15" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_tipo_evolucion" unique="PRIMARY_KEY" >
+				<column name="id_tipo_evolucion" />
+			</index>
+		</table>
+		<table name="tipo_forma_aprendizaje" >
+			<column name="id_tipo_aprendizaje" type="int" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
+			<column name="tipo_aprendizaje" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_tipo_forma_aprendizaje" unique="PRIMARY_KEY" >
+				<column name="id_tipo_aprendizaje" />
+			</index>
+		</table>
+		<table name="tipo_piedra" >
+			<column name="id_tipo_piedra" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="nombre_piedra" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_tipo_piedra" unique="PRIMARY_KEY" >
+				<column name="id_tipo_piedra" />
+			</index>
+		</table>
+		<view name="cantidad_tipo_pokemon" >
+			<view_script><![CDATA[select `t`.`nombre` AS `tipo`,count(0) AS `cantidad` from `pokemon`.`pokemon` `p` join `pokemon`.`pokemon_tipo` `pt` join `pokemon`.`tipo` `t` where ((`p`.`numero_pokedex` = `pt`.`numero_pokedex`) and (`pt`.`id_tipo` = `t`.`id_tipo`)) group by `t`.`nombre`]]></view_script>
+			<column name="tipo" type="varchar" />
+			<column name="cantidad" type="bigint" />
+		</view>
+		<view name="pokemon_evolucion_piedra" >
+			<view_script><![CDATA[select distinct `p`.`numero_pokedex` AS `numero_pokedex`,`p`.`nombre` AS `nombre` from `pokemon`.`pokemon` `p` join `pokemon`.`pokemon_forma_evolucion` `pfe` join `pokemon`.`forma_evolucion` `fe` join `pokemon`.`tipo_evolucion` `te` where ((`p`.`numero_pokedex` = `pfe`.`numero_pokedex`) and (`pfe`.`id_forma_evolucion` = `fe`.`id_forma_evolucion`) and (`fe`.`tipo_evolucion` = `te`.`id_tipo_evolucion`) and (lower(`te`.`tipo_evolucion`) = 'piedra'))]]></view_script>
+			<column name="numero_pokedex" type="int" />
+			<column name="nombre" type="varchar" />
+		</view>
+		<view name="pokemon_no_evolucionan" >
+			<view_script><![CDATA[select `p`.`numero_pokedex` AS `numero_pokedex`,`p`.`nombre` AS `nombre` from `pokemon`.`pokemon` `p` join `pokemon`.`evoluciona_de` `ev` where ((`p`.`numero_pokedex` = `ev`.`pokemon_evolucionado`) and (not(exists(select `pokemon`.`evoluciona_de`.`pokemon_origen` from `pokemon`.`evoluciona_de` where (`pokemon`.`evoluciona_de`.`pokemon_origen` = `p`.`numero_pokedex`))))) union select `p`.`numero_pokedex` AS `numero_pokedex`,`p`.`nombre` AS `nombre` from `pokemon`.`pokemon` `p` where (not(exists(select 1 from `pokemon`.`evoluciona_de` where ((`pokemon`.`evoluciona_de`.`pokemon_origen` = `p`.`numero_pokedex`) or (`pokemon`.`evoluciona_de`.`pokemon_evolucionado` = `p`.`numero_pokedex`)))))]]></view_script>
+			<column name="numero_pokedex" type="int" />
+			<column name="nombre" type="varchar" />
+		</view>
+		<procedure name="muestraPokemonByTipo" id="Procedure_3c60f7a" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE PROCEDURE pokemon.muestraPokemonByTipo ( p_tipo varchar(10) )
+begin
+    select p.nombre
+    from pokemon p, pokemon_tipo pt, tipo t
+    where p.numero_pokedex = pt.numero_pokedex and pt.id_tipo=t.id_tipo
+    and lower(t.nombre) = trim(lower(p_tipo));
+    
+end]]></string>
+		</procedure>
+		<procedure name="muestraPokemonByTipos" id="Procedure_4530ae0" isSystem="false" params_known="n" >
+			<string><![CDATA[CREATE PROCEDURE pokemon.muestraPokemonByTipos ( p_tipo1 varchar(10), p_tipo2 varchar(10) )
+begin
+    select nombre
+    from pokemon
+    where numero_pokedex in (select numero_pokedex
+                            from pokemon_tipo pt, tipo t
+                            where pt.id_tipo=t.id_tipo and lower(t.nombre)=lower(trim(p_tipo1)))
+    and numero_pokedex in (select numero_pokedex
+                            from pokemon_tipo pt, tipo t
+                            where pt.id_tipo=t.id_tipo and lower(t.nombre)=lower(trim(p_tipo2)));
+    
+end]]></string>
+		</procedure>
+	</schema>
+	<connector name="MySql" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-8.0.14.jar" driver_desc="Standard" host="localhost" port="3306" instance="pokemon" user="root" passwd="QS5qb2tlci4x" />
+	<layout name="Parsed Script Layout" id="Layout_f52524" show_relation="name" >
+		<entity schema="pokemon" name="movimiento" color="3986C1" x="560" y="464" />
+		<entity schema="pokemon" name="pokemon_forma_evolucion" color="3986C1" x="304" y="224" />
+		<entity schema="pokemon" name="forma_evolucion" color="3986C1" x="592" y="208" />
+		<entity schema="pokemon" name="cantidad_tipo_pokemon" color="3986C1" x="1472" y="304" />
+		<entity schema="pokemon" name="estadisticas_base" color="3986C1" x="48" y="480" />
+		<entity schema="pokemon" name="pokemon_evolucion_piedra" color="3986C1" x="1472" y="416" />
+		<entity schema="pokemon" name="pokemon_no_evolucionan" color="3986C1" x="1472" y="528" />
+		<entity schema="pokemon" name="forma_aprendizaje" color="3986C1" x="416" y="832" />
+		<entity schema="pokemon" name="piedra" color="3986C1" x="816" y="176" />
+		<entity schema="pokemon" name="nivel_evolucion" color="3986C1" x="592" y="80" />
+		<entity schema="pokemon" name="pokemon_movimiento_forma" color="3986C1" x="416" y="688" />
+		<entity schema="pokemon" name="movimiento_efecto_secundario" color="3986C1" x="912" y="544" />
+		<entity schema="pokemon" name="efecto_secundario" color="3986C1" x="912" y="688" />
+		<entity schema="pokemon" name="pokemon_tipo" color="FFFFCC" x="384" y="352" />
+		<entity schema="pokemon" name="tipo" color="FFFFCC" x="752" y="416" />
+		<entity schema="pokemon" name="tipo_ataque" color="FFFFCC" x="960" y="400" />
+		<entity schema="pokemon" name="pokemon" color="CCFFFF" x="304" y="480" />
+		<entity schema="pokemon" name="evoluciona_de" color="CCE6FF" x="192" y="688" />
+		<entity schema="pokemon" name="mo" color="FFCCFF" x="288" y="960" />
+		<entity schema="pokemon" name="mt" color="FFCCFF" x="480" y="960" />
+		<entity schema="pokemon" name="tipo_forma_aprendizaje" color="3986C1" x="704" y="800" />
+		<entity schema="pokemon" name="nivel_aprendizaje" color="FFCCFF" x="704" y="896" />
+		<entity schema="pokemon" name="tipo_evolucion" color="FFFFCC" x="816" y="272" />
+		<entity schema="pokemon" name="tipo_piedra" color="FFFFCC" x="1056" y="160" />
+		<group name="Vista" color="999999" >
+			<entity schema="pokemon" name="cantidad_tipo_pokemon" />
+			<entity schema="pokemon" name="pokemon_evolucion_piedra" />
+			<entity schema="pokemon" name="pokemon_no_evolucionan" />
+		</group>
+	</layout>
+</project>
